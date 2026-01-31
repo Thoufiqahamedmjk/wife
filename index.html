@@ -1,29 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Urgent Message</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Husband Translator v4.2</title>
     <style>
-        body { display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; background: #f0f0f0; }
-        #prank-box { text-align: center; padding: 50px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        button { padding: 15px 30px; font-size: 1.2rem; cursor: pointer; border: none; border-radius: 10px; background: #ff4757; color: white; }
+        body { background: #0a0a0a; color: #00ff00; font-family: 'Courier New', monospace; text-align: center; padding: 20px; overflow: hidden; }
+        #container { border: 2px solid #00ff00; border-radius: 15px; padding: 30px; display: inline-block; margin-top: 50px; background: rgba(0, 255, 0, 0.05); }
+        .bar { display: inline-block; width: 4px; height: 20px; background: #00ff00; margin: 0 2px; transition: height 0.1s; }
+        button { background: #00ff00; color: #000; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; border-radius: 5px; font-size: 1.1rem; margin-top: 20px; }
+        button:hover { background: #00cc00; }
+        #output { margin-top: 30px; min-height: 50px; font-size: 1.2rem; color: #fff; font-style: italic; }
+        .loading { color: #ffcc00; }
     </style>
 </head>
 <body>
-    <div id="prank-box">
-        <h1>Do you love your husband?</h1>
-        <button id="noBtn" onmouseover="moveButton()">NO</button>
-        <button onclick="alert('I knew it! ❤️')">YES</button>
+
+<div id="container">
+    <h1>🔊 HUSBAND-TO-ENGLISH AI</h1>
+    <p>Status: <span id="status">Awaiting Input...</span></p>
+    
+    <div id="visualizer">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
     </div>
 
-    <script>
-        function moveButton() {
-            const btn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
-            btn.style.position = 'absolute';
-            btn.style.left = x + 'px';
-            btn.style.top = y + 'px';
-        }
-    </script>
+    <div id="output">Click the button when he starts talking...</div>
+    
+    <button onclick="startTranslate()">TRANSLATE IN REAL-TIME</button>
+</div>
+
+<script>
+    const translations = [
+        "Translation: 'I'll do it later' = 'I have already forgotten you asked.'",
+        "Translation: 'I'm almost ready' = 'I am currently sitting on the bed scrolling Reddit.'",
+        "Translation: 'What do you want for dinner?' = 'Please pick a place so I don't have to think.'",
+        "Translation: 'I was just resting my eyes' = 'I have been asleep for 45 minutes.'",
+        "Translation: 'I can't find it' = 'I haven't actually looked for it yet.'",
+        "Translation: 'Yes, I'm listening' = 'I am currently thinking about Batman.'",
+        "Translation: 'It's a small scratch' = 'The car is fundamentally different now.'"
+    ];
+
+    function animateBars() {
+        const bars = document.querySelectorAll('.bar');
+        bars.forEach(bar => {
+            bar.style.height = Math.random() * 50 + 10 + 'px';
+        });
+    }
+
+    setInterval(animateBars, 150);
+
+    function startTranslate() {
+        const output = document.getElementById('output');
+        const status = document.getElementById('status');
+        
+        status.innerText = "LISTENING...";
+        status.style.color = "#ff4757";
+        output.innerHTML = '<span class="loading">Analyzing vocal frequencies...</span>';
+
+        setTimeout(() => {
+            status.innerText = "PROCESSING...";
+            status.style.color = "#ffcc00";
+            output.innerHTML = '<span class="loading">Cross-referencing excuses database...</span>';
+        }, 1500);
+
+        setTimeout(() => {
+            const randomPick = translations[Math.floor(Math.random() * translations.length)];
+            status.innerText = "AWAITING INPUT...";
+            status.style.color = "#00ff00";
+            output.innerText = randomPick;
+            
+            // Interaction: Haptic feedback/Sound feel
+            if (window.navigator.vibrate) window.navigator.vibrate(100);
+        }, 3500);
+    }
+</script>
+
 </body>
 </html>
