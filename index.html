@@ -1,79 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Husband Translator v4.2</title>
+    <title>A Special Message For You</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js"></script>
     <style>
-        body { background: #0a0a0a; color: #00ff00; font-family: 'Courier New', monospace; text-align: center; padding: 20px; overflow: hidden; }
-        #container { border: 2px solid #00ff00; border-radius: 15px; padding: 30px; display: inline-block; margin-top: 50px; background: rgba(0, 255, 0, 0.05); }
-        .bar { display: inline-block; width: 4px; height: 20px; background: #00ff00; margin: 0 2px; transition: height 0.1s; }
-        button { background: #00ff00; color: #000; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; border-radius: 5px; font-size: 1.1rem; margin-top: 20px; }
-        button:hover { background: #00cc00; }
-        #output { margin-top: 30px; min-height: 50px; font-size: 1.2rem; color: #fff; font-style: italic; }
-        .loading { color: #ffcc00; }
+        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; background: #fff0f3; }
+        #gui { position: absolute; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .physics-element { 
+            position: absolute; padding: 15px 25px; background: white; 
+            border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            user-select: none; pointer-events: auto; cursor: grab;
+            border: 2px solid #ff4d6d; color: #ff4d6d; font-weight: bold;
+        }
+        h1 { color: #ff4d6d; font-size: 3rem; pointer-events: auto; cursor: pointer; }
+        #instruction { position: fixed; bottom: 20px; color: #888; width: 100%; text-align: center; }
     </style>
 </head>
 <body>
 
-<div id="container">
-    <h1>🔊 HUSBAND-TO-ENGLISH AI</h1>
-    <p>Status: <span id="status">Awaiting Input...</span></p>
-    
-    <div id="visualizer">
-        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <div id="gui">
+        <h1 class="physics-element" style="top:20%; left:30%;">Click Me for a Surprise! ❤️</h1>
+        <div class="physics-element" style="top:40%; left:20%;">You are the best!</div>
+        <div class="physics-element" style="top:45%; left:50%;">I love you more than coding</div>
+        <div class="physics-element" style="top:55%; left:35%;">Wait, why is the site breaking?</div>
+        <div class="physics-element" style="top:30%; left:60%;">Oops... 😮</div>
+        <button class="physics-element" style="top:70%; left:45%; background: #ff4d6d; color: white;">Don't Click This</button>
     </div>
 
-    <div id="output">Click the button when he starts talking...</div>
-    
-    <button onclick="startTranslate()">TRANSLATE IN REAL-TIME</button>
-</div>
+    <div id="instruction">Try to grab the pieces!</div>
 
-<script>
-    const translations = [
-        "Translation: 'I'll do it later' = 'I have already forgotten you asked.'",
-        "Translation: 'I'm almost ready' = 'I am currently sitting on the bed scrolling Reddit.'",
-        "Translation: 'What do you want for dinner?' = 'Please pick a place so I don't have to think.'",
-        "Translation: 'I was just resting my eyes' = 'I have been asleep for 45 minutes.'",
-        "Translation: 'I can't find it' = 'I haven't actually looked for it yet.'",
-        "Translation: 'Yes, I'm listening' = 'I am currently thinking about Batman.'",
-        "Translation: 'It's a small scratch' = 'The car is fundamentally different now.'"
-    ];
+    <script>
+        const { Engine, Render, Runner, World, Bodies, Mouse, MouseConstraint } = Matter;
 
-    function animateBars() {
-        const bars = document.querySelectorAll('.bar');
-        bars.forEach(bar => {
-            bar.style.height = Math.random() * 50 + 10 + 'px';
+        const engine = Engine.create();
+        const world = engine.world;
+        const elements = document.querySelectorAll('.physics-element');
+        const physicsBodies = [];
+
+        // Setup Physics
+        const render = Render.create({
+            element: document.body,
+            engine: engine,
+            options: { width: window.innerWidth, height: window.innerHeight, wireframes: false, background: 'transparent' }
         });
-    }
 
-    setInterval(animateBars, 150);
+        // Create Walls
+        World.add(world, [
+            Bodies.rectangle(window.innerWidth/2, window.innerHeight + 25, window.innerWidth, 50, { isStatic: true }),
+            Bodies.rectangle(-25, window.innerHeight/2, 50, window.innerHeight, { isStatic: true }),
+            Bodies.rectangle(window.innerWidth + 25, window.innerHeight/2, 50, window.innerHeight, { isStatic: true })
+        ]);
 
-    function startTranslate() {
-        const output = document.getElementById('output');
-        const status = document.getElementById('status');
-        
-        status.innerText = "LISTENING...";
-        status.style.color = "#ff4757";
-        output.innerHTML = '<span class="loading">Analyzing vocal frequencies...</span>';
+        let initialized = false;
 
-        setTimeout(() => {
-            status.innerText = "PROCESSING...";
-            status.style.color = "#ffcc00";
-            output.innerHTML = '<span class="loading">Cross-referencing excuses database...</span>';
-        }, 1500);
+        function startPhysics() {
+            if (initialized) return;
+            initialized = true;
 
-        setTimeout(() => {
-            const randomPick = translations[Math.floor(Math.random() * translations.length)];
-            status.innerText = "AWAITING INPUT...";
-            status.style.color = "#00ff00";
-            output.innerText = randomPick;
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const body = Bodies.rectangle(
+                    rect.left + rect.width/2, 
+                    rect.top + rect.height/2, 
+                    rect.width, 
+                    rect.height, 
+                    { restitution: 0.6, friction: 0.1 }
+                );
+                el.style.position = 'fixed';
+                el.style.margin = '0';
+                physicsBodies.push({ el, body });
+                World.add(world, body);
+            });
+
+            const mouse = Mouse.create(render.canvas);
+            const mouseConstraint = MouseConstraint.create(engine, {
+                mouse: mouse,
+                constraint: { stiffness: 0.2, render: { visible: false } }
+            });
+            World.add(world, mouseConstraint);
             
-            // Interaction: Haptic feedback/Sound feel
-            if (window.navigator.vibrate) window.navigator.vibrate(100);
-        }, 3500);
-    }
-</script>
+            Runner.run(engine);
+            
+            requestAnimationFrame(function update() {
+                physicsBodies.forEach(({ el, body }) => {
+                    el.style.transform = `translate(${body.position.x - el.offsetWidth/2 - (parseFloat(el.style.left) || 0)}px, ${body.position.y - el.offsetHeight/2 - (parseFloat(el.style.top) || 0)}px) rotate(${body.angle}rad)`;
+                });
+                requestAnimationFrame(update);
+            });
+        }
 
+        // Trigger on first interaction
+        window.addEventListener('mousedown', startPhysics);
+        window.addEventListener('touchstart', startPhysics);
+    </script>
 </body>
 </html>
