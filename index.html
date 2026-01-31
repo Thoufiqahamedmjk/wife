@@ -3,153 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Love Story | Memories</title>
+    <title>Our Timeless Memories</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #f9f1f1;
-            --accent-color: #ff4d6d;
-            --text-color: #4a4a4a;
+            --soft-pink: #ffe5ec;
+            --deep-rose: #ff4d6d;
+            --overlay: rgba(255, 255, 255, 0.8);
         }
 
-        body {
+        body, html {
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background-color: var(--bg-color);
-            font-family: 'Georgia', serif;
-            color: var(--text-color);
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Prevents manual scrolling to keep the focus on the animation */
+            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+            font-family: 'Montserrat', sans-serif;
         }
 
-        .container {
+        /* Floating Background Elements */
+        .heart-bg {
+            position: absolute;
+            color: rgba(255, 77, 109, 0.1);
+            font-size: 2rem;
+            user-select: none;
+            z-index: 0;
+        }
+
+        .header {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
-            width: 90%;
-            max-width: 600px;
+            z-index: 10;
+            pointer-events: none; /* Allows clicking "through" the text */
         }
 
         h1 {
-            font-weight: 300;
-            margin-bottom: 20px;
-            color: var(--accent-color);
-            letter-spacing: 2px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            color: var(--deep-rose);
+            margin: 0;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.1);
         }
 
-        .slideshow-wrapper {
-            position: relative;
-            width: 100%;
-            padding-bottom: 125%; /* Keeps a consistent 4:5 aspect ratio */
-            overflow: hidden;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            background: #fff;
+        p {
+            font-size: 1rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: #777;
         }
 
-        .slide {
+        /* The Memory Card Style */
+        .memory-card {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 1.5s ease-in-out;
+            bottom: -500px; /* Start off-screen */
+            width: 250px;
+            padding: 10px;
+            background: white;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border-radius: 5px;
+            transform: rotate(var(--rotation));
+            transition: transform 0.5s ease;
+            z-index: 5;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
         }
 
-        .slide.active {
-            opacity: 1;
-        }
-
-        .slide img {
+        .memory-card img {
             width: 100%;
-            height: 100%;
-            object-fit: cover; /* Ensures images fill the frame beautifully */
+            height: auto;
+            border-radius: 2px;
+            display: block;
         }
 
-        .caption {
-            margin-top: 15px;
-            font-style: italic;
-            font-size: 1.1rem;
-        }
-
-        .heart {
-            color: var(--accent-color);
-            font-size: 24px;
+        .memory-card::after {
+            content: attr(data-label);
             margin-top: 10px;
-            animation: pulse 1.5s infinite;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.2rem;
+            color: #555;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+        /* Animation for the float-up effect */
+        @keyframes floatUp {
+            0% {
+                bottom: -500px;
+                opacity: 0;
+                transform: translateX(0) rotate(var(--rotation));
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                bottom: 110%;
+                opacity: 0;
+                transform: translateX(var(--drift)) rotate(calc(var(--rotation) + 10deg));
+            }
         }
+
+        .float-animation {
+            animation: floatUp 15s linear forwards;
+        }
+
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Our Memories</h1>
-        
-        <div class="slideshow-wrapper" id="slideshow">
-            </div>
-
-        <div class="caption" id="image-counter">Memory #20</div>
-        <div class="heart">❤</div>
+    <div class="header">
+        <h1>Forever & Always</h1>
+        <p>Rewinding our Love</p>
     </div>
 
-    <script>
-        const slideshow = document.getElementById('slideshow');
-        const counter = document.getElementById('image-counter');
-        const totalImages = 20;
-        let currentIndex = totalImages; // Start at 20
+    <div id="stage"></div>
 
-        // 1. Create the slides in the DOM
-        for (let i = totalImages; i >= 1; i--) {
-            const div = document.createElement('div');
-            div.className = `slide ${i === totalImages ? 'active' : ''}`;
-            div.id = `slide-${i}`;
+    <script>
+        const stage = document.getElementById('stage');
+        let currentImage = 20; // Start at 20 as requested
+        const totalImages = 20;
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart-bg';
+            heart.innerHTML = '❤';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = Math.random() * 100 + 'vh';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            document.body.appendChild(heart);
+        }
+
+        // Create initial background decor
+        for(let i=0; i<30; i++) createHeart();
+
+        function spawnMemory() {
+            const card = document.createElement('div');
+            card.className = 'memory-card float-animation';
             
+            // Randomize position and slight rotation for a "scattered photos" look
+            const randomX = Math.random() * 70 + 5; // 5% to 75% width
+            const randomRotation = (Math.random() * 30 - 15) + 'deg';
+            const randomDrift = (Math.random() * 100 - 50) + 'px';
+            
+            card.style.left = randomX + 'vw';
+            card.style.setProperty('--rotation', randomRotation);
+            card.style.setProperty('--drift', randomDrift);
+            card.setAttribute('data-label', `Memory #${currentImage}`);
+
             const img = document.createElement('img');
-            // Assuming images are in the same folder as this HTML file
-            img.src = `${i}.jpeg`; 
-            img.alt = `Memory ${i}`;
-            
-            // Error handling if an image is missing
-            img.onerror = function() {
-                this.src = 'https://via.placeholder.com/600x800?text=Missing+Memory';
+            img.src = `${currentImage}.jpeg`;
+            img.alt = `Our Memory ${currentImage}`;
+
+            // Handle image error
+            img.onerror = () => {
+                card.style.display = 'none';
             };
 
-            div.appendChild(img);
-            slideshow.appendChild(div);
-        }
+            card.appendChild(img);
+            stage.appendChild(card);
 
-        // 2. Function to handle the descending scroll
-        function showNextSlide() {
-            // Remove active class from current
-            document.getElementById(`slide-${currentIndex}`).classList.remove('active');
+            // Cleanup DOM after animation finishes
+            setTimeout(() => {
+                card.remove();
+            }, 15000);
 
-            // Decrement index
-            currentIndex--;
-
-            // Reset to 20 if we go below 1
-            if (currentIndex < 1) {
-                currentIndex = totalImages;
+            // Cycle descending
+            currentImage--;
+            if (currentImage < 1) {
+                currentImage = 20; // Loop back to 20
             }
-
-            // Add active class to new slide
-            document.getElementById(`slide-${currentIndex}`).classList.add('active');
-            
-            // Update counter text
-            counter.innerText = `Memory #${currentIndex}`;
         }
 
-        // 3. Set the interval to 4 seconds (4000ms)
-        setInterval(showNextSlide, 4000);
+        // Initial trigger
+        spawnMemory();
+
+        // 4-second interval as requested
+        setInterval(spawnMemory, 4000);
     </script>
 </body>
 </html>
