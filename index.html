@@ -8,121 +8,126 @@
     <style>
         :root {
             --pink: #ff4d6d;
-            --soft-pink: #fff0f3;
+            --deep-rose: #c9184a;
         }
 
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
             overflow: hidden;
-            background: radial-gradient(circle, #ffffff 0%, #fce4ec 100%);
+            background: #fff;
+            transition: background 3s ease;
             font-family: 'Montserrat', sans-serif;
         }
 
-        /* Floating Background Hearts */
-        .bg-heart {
-            position: absolute;
-            color: rgba(255, 77, 109, 0.2);
+        /* The Surprise Flash */
+        #flash-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            z-index: 2000;
+            opacity: 0;
             pointer-events: none;
-            z-index: 0;
-            animation: drift 10s infinite linear;
         }
 
-        @keyframes drift {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            50% { opacity: 0.5; }
-            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        .flash-active {
+            animation: flashAnim 1s ease-out forwards;
         }
 
-        /* FIXED CENTER CONTENT - Now on top with background blur */
+        @keyframes flashAnim {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Center Message - The Surprise */
         .center-content {
             position: fixed;
             top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) scale(0.5);
             text-align: center;
-            z-index: 100; /* High z-index to stay above images */
+            z-index: 1000;
             width: 85%;
             max-width: 500px;
+            padding: 40px 20px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
-            padding: 30px;
-            border-radius: 20px;
-            /* Glass effect: makes text readable even if images pass underneath */
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 8px 32px 0 rgba(255, 77, 109, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .boom-active .center-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
         }
 
         h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(2.2rem, 8vw, 4rem);
+            font-size: clamp(2.5rem, 10vw, 4.5rem);
             color: var(--pink);
             margin: 0;
-            text-shadow: 0 2px 10px rgba(255, 77, 109, 0.2);
         }
 
         #special-note {
-            font-size: 1rem;
-            color: #555;
+            font-size: 1.1rem;
+            color: #444;
             letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-top: 15px;
-            opacity: 0;
-            transition: opacity 3s ease;
+            margin-top: 20px;
             line-height: 1.6;
+            font-weight: 300;
         }
 
-        /* Polaroid Memory Cards */
+        /* Memory Cards */
         .card {
             position: absolute;
             bottom: -600px;
-            width: 240px;
+            width: 260px;
             background: white;
-            padding: 10px 10px 35px 10px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            padding: 12px 12px 40px 12px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.1);
             border-radius: 4px;
-            z-index: 5; /* Lower than center-content */
+            z-index: 10;
         }
 
-        .card img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+        .card img { width: 100%; height: auto; display: block; border-radius: 2px; }
 
-        .card::after {
-            content: "♥";
-            position: absolute;
-            bottom: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: var(--pink);
-            font-size: 18px;
-        }
-
-        @keyframes floatEffect {
-            0% { bottom: -600px; opacity: 0; transform: translateX(0) rotate(var(--r)); }
+        @keyframes floatUpwards {
+            0% { bottom: -600px; opacity: 0; transform: rotate(var(--r)); }
             10% { opacity: 1; }
             90% { opacity: 1; }
-            100% { bottom: 120%; opacity: 0; transform: translateX(var(--d)) rotate(calc(var(--r) + 15deg)); }
+            100% { bottom: 120%; opacity: 0; transform: translateX(var(--d)) rotate(calc(var(--r) + 25deg)); }
         }
 
-        .animate { animation: floatEffect 22s linear forwards; }
+        .animate { animation: floatUpwards 20s linear forwards; }
 
-        @media (max-width: 600px) {
-            .card { width: 150px; }
-            .center-content { padding: 20px; width: 75%; }
+        /* Heart Rain */
+        .falling-heart {
+            position: absolute;
+            color: var(--pink);
+            z-index: 500;
+            pointer-events: none;
+            top: -50px;
         }
+
+        @media (max-width: 600px) { .card { width: 170px; } }
     </style>
 </head>
-<body>
+<body id="main-body">
+
+    <div id="flash-overlay"></div>
 
     <div class="center-content">
-        <h1>Forever You & Me</h1>
+        <h1>You are my Forever</h1>
         <div id="special-note">
-            In all the world, there is no heart for me like yours. <br> 
-            In all the world, there is no love for you like mine.
+            Every memory we've made is a treasure <br>
+            I carry in my heart. <br>
+            <b>I love you!</b>
         </div>
     </div>
 
@@ -130,30 +135,66 @@
 
     <script>
         const gallery = document.getElementById('gallery');
-        const note = document.getElementById('special-note');
+        const flash = document.getElementById('flash-overlay');
+        const body = document.getElementById('main-body');
         let current = 20;
+        let activeStream = true;
 
-        function spawnHeart() {
+        // Function for the heart rain after the "Boom"
+        function rainHeart() {
             const h = document.createElement('div');
-            h.className = 'bg-heart';
+            h.className = 'falling-heart';
             h.innerHTML = '❤';
             h.style.left = Math.random() * 100 + 'vw';
-            h.style.bottom = '-50px';
-            h.style.fontSize = (Math.random() * 20 + 10) + 'px';
-            h.style.animationDuration = (Math.random() * 5 + 10) + 's';
+            const size = (Math.random() * 25 + 15) + 'px';
+            h.style.fontSize = size;
+            h.style.opacity = Math.random();
+            
+            const duration = Math.random() * 3 + 3;
+            h.style.transition = `transform ${duration}s linear, opacity ${duration}s`;
+            
             document.body.appendChild(h);
-            setTimeout(() => h.remove(), 10000);
+
+            setTimeout(() => {
+                h.style.transform = `translateY(110vh) rotate(${Math.random() * 360}deg)`;
+                h.style.opacity = '0';
+            }, 100);
+
+            setTimeout(() => h.remove(), duration * 1000);
+        }
+
+        function triggerMagic() {
+            activeStream = false;
+            
+            // 1. Flash
+            flash.classList.add('flash-active');
+            
+            // 2. Clear images and change background after flash peaks
+            setTimeout(() => {
+                gallery.innerHTML = '';
+                body.classList.add('boom-active');
+                body.style.background = 'radial-gradient(circle, #ffffff 0%, #ffcbd1 100%)';
+                
+                // 3. Start Heart Explosion
+                for(let i=0; i<80; i++) {
+                    setTimeout(rainHeart, i * 60);
+                }
+                // Continue soft rain
+                setInterval(rainHeart, 400);
+            }, 500);
         }
 
         function spawnMemory() {
+            if (!activeStream) return;
+
             const card = document.createElement('div');
             card.className = 'card animate';
             
             const r = (Math.random() * 30 - 15) + 'deg';
-            const d = (Math.random() * 160 - 80) + 'px';
+            const d = (Math.random() * 180 - 90) + 'px';
             
-            // Randomly pick a side to prevent clogging the center too much
-            let randomX = Math.random() > 0.5 ? (Math.random() * 20) : (Math.random() * 20 + 60); 
+            // Keep center clear for the surprise
+            let randomX = Math.random() > 0.5 ? (Math.random() * 20) : (Math.random() * 20 + 60);
             card.style.left = randomX + 'vw';
             
             card.style.setProperty('--r', r);
@@ -166,20 +207,18 @@
             card.appendChild(img);
             gallery.appendChild(card);
 
-            // Show note when we reach the first image (1.jpeg)
+            // If we hit the last image, wait for it to float up a bit then BOOM
             if(current === 1) {
-                note.style.opacity = "1";
+                setTimeout(triggerMagic, 5000);
+                return; // Stop spawning after 1.jpeg
             }
 
             current--;
-            if(current < 1) current = 20;
-
-            setTimeout(() => card.remove(), 22500);
+            setTimeout(spawnMemory, 4000);
         }
 
-        setInterval(spawnHeart, 1500);
+        // Initialize the memory stream
         spawnMemory();
-        setInterval(spawnMemory, 4000);
     </script>
 </body>
 </html>
