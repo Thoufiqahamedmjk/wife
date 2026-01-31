@@ -1,117 +1,155 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>⚠️ CRITICAL SECURITY CLEARANCE ⚠️</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Love Story | Memories</title>
     <style>
-        body { background: #000; color: #ff3366; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
-        #terminal { width: 80%; max-width: 500px; margin: 10% auto; border: 1px solid #ff3366; padding: 20px; background: rgba(20, 0, 0, 0.9); box-shadow: 0 0 15px #ff3366; }
-        .clause { margin: 10px 0; font-size: 0.9rem; color: #fff; display: none; }
-        .btn-container { display: flex; justify-content: space-around; margin-top: 20px; }
-        button { padding: 10px 20px; font-weight: bold; cursor: pointer; border: none; }
-        #accept-btn { background: #ff3366; color: white; position: relative; }
-        #decline-btn { background: #444; color: #888; }
-        #love-rain { position: fixed; top: 0; left: 0; pointer-events: none; }
+        :root {
+            --bg-color: #f9f1f1;
+            --accent-color: #ff4d6d;
+            --text-color: #4a4a4a;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            font-family: 'Georgia', serif;
+            color: var(--text-color);
+        }
+
+        .container {
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-weight: 300;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+            letter-spacing: 2px;
+        }
+
+        .slideshow-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 125%; /* Keeps a consistent 4:5 aspect ratio */
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background: #fff;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures images fill the frame beautifully */
+        }
+
+        .caption {
+            margin-top: 15px;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        .heart {
+            color: var(--accent-color);
+            font-size: 24px;
+            margin-top: 10px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
 
-<div id="terminal">
-    <div id="log"></div>
-    <div id="clauses">
-        <div class="clause" id="c1">✅ Clause 1: Husband is always right (except when he's wrong).</div>
-        <div class="clause" id="c2">✅ Clause 2: Wife must provide 1 forehead kiss per 10 lines of code.</div>
-        <div class="clause" id="c3">✅ Clause 3: 50% of your fries belong to the Husband.</div>
-    </div>
-    <div id="final-ask" style="display:none; margin-top:20px;">
-        <p>DO YOU ACCEPT THESE TERMS, MY BEAUTIFUL WIFE?</p>
-        <div class="btn-container">
-            <button id="decline-btn" onmouseover="hideDecline()">DECLINE</button>
-            <button id="accept-btn" onclick="celebrate()">I ACCEPT</button>
-        </div>
-    </div>
-</div>
+    <div class="container">
+        <h1>Our Memories</h1>
+        
+        <div class="slideshow-wrapper" id="slideshow">
+            </div>
 
-<script>
-    const log = document.getElementById('log');
-    const terminalLines = [
-        "> INITIALIZING LOVE_PROTOCOL_v6.9...",
-        "> SCANNING FOR THE WORLD'S BEST WIFE...",
-        "> [FOUND]: TARGET LOCATED AT THIS IP.",
-        "> GENERATING LEGAL HOUSEHOLD CLAUSES..."
-    ];
+        <div class="caption" id="image-counter">Memory #20</div>
+        <div class="heart">❤</div>
+    </div>
 
-    let line = 0;
-    function type() {
-        if(line < terminalLines.length) {
-            log.innerHTML += terminalLines[line] + "<br>";
-            line++;
-            setTimeout(type, 800);
-        } else {
-            showClauses();
+    <script>
+        const slideshow = document.getElementById('slideshow');
+        const counter = document.getElementById('image-counter');
+        const totalImages = 20;
+        let currentIndex = totalImages; // Start at 20
+
+        // 1. Create the slides in the DOM
+        for (let i = totalImages; i >= 1; i--) {
+            const div = document.createElement('div');
+            div.className = `slide ${i === totalImages ? 'active' : ''}`;
+            div.id = `slide-${i}`;
+            
+            const img = document.createElement('img');
+            // Assuming images are in the same folder as this HTML file
+            img.src = `${i}.jpeg`; 
+            img.alt = `Memory ${i}`;
+            
+            // Error handling if an image is missing
+            img.onerror = function() {
+                this.src = 'https://via.placeholder.com/600x800?text=Missing+Memory';
+            };
+
+            div.appendChild(img);
+            slideshow.appendChild(div);
         }
-    }
 
-    function showClauses() {
-        let i = 1;
-        const interval = setInterval(() => {
-            const c = document.getElementById('c' + i);
-            if(c) { c.style.display = 'block'; i++; }
-            else { 
-                clearInterval(interval);
-                document.getElementById('final-ask').style.display = 'block';
-                startChasing();
+        // 2. Function to handle the descending scroll
+        function showNextSlide() {
+            // Remove active class from current
+            document.getElementById(`slide-${currentIndex}`).classList.remove('active');
+
+            // Decrement index
+            currentIndex--;
+
+            // Reset to 20 if we go below 1
+            if (currentIndex < 1) {
+                currentIndex = totalImages;
             }
-        }, 1000);
-    }
 
-    function startChasing() {
-        const btn = document.getElementById('accept-btn');
-        btn.onmouseover = () => {
-            const x = Math.random() * (window.innerWidth - 100);
-            const y = Math.random() * (window.innerHeight - 50);
-            btn.style.position = 'fixed';
-            btn.style.left = x + 'px';
-            btn.style.top = y + 'px';
-            btn.innerText = "CATCH ME! ❤️";
-        };
-    }
-
-    function hideDecline() {
-        const d = document.getElementById('decline-btn');
-        d.innerText = "NOT AN OPTION";
-        d.style.opacity = "0.2";
-    }
-
-    function celebrate() {
-        document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20vh;'>CONTRACT SIGNED! ❤️<br><br>Preparing your lifetime supply of hugs...</h1>";
-        document.body.style.background = "#ff3366";
-        
-        // Physics-based Heart Rain
-        const { Engine, Render, Runner, World, Bodies } = Matter;
-        const engine = Engine.create();
-        const runner = Runner.run(engine);
-        
-        for(let i=0; i<50; i++) {
-            const heart = document.createElement('div');
-            heart.innerHTML = "❤️";
-            heart.style.position = "absolute";
-            heart.style.fontSize = (Math.random() * 30 + 10) + "px";
-            document.body.appendChild(heart);
-
-            const body = Bodies.rectangle(Math.random()*window.innerWidth, -100, 30, 30);
-            World.add(engine.world, body);
-
-            (function update() {
-                heart.style.left = body.position.x + "px";
-                heart.style.top = body.position.y + "px";
-                heart.style.transform = `rotate(${body.angle}rad)`;
-                requestAnimationFrame(update);
-            })();
+            // Add active class to new slide
+            document.getElementById(`slide-${currentIndex}`).classList.add('active');
+            
+            // Update counter text
+            counter.innerText = `Memory #${currentIndex}`;
         }
-    }
 
-    type();
-</script>
+        // 3. Set the interval to 4 seconds (4000ms)
+        setInterval(showNextSlide, 4000);
+    </script>
 </body>
 </html>
