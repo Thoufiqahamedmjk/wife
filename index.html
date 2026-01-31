@@ -3,220 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Love | 3D Cinematic Journey</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+    <title>The Memory Helix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --pink: #ff4d6d;
-            --white: #ffffff;
-        }
-
-        body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            overflow: hidden;
-            background: #000;
+        :root { --accent: #ff4d6d; }
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background: #000; overflow: hidden; color: #fff;
             font-family: 'Montserrat', sans-serif;
-            perspective: 1500px;
         }
 
-        /* The Surprise Text Container */
-        .surprise-core {
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0.5);
-            text-align: center;
-            z-index: 1000;
-            opacity: 0;
+        /* 3D Container */
+        #viewport {
+            position: absolute; width: 100%; height: 100%;
+            perspective: 1000px; transform-style: preserve-3d;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        #world {
+            position: relative; width: 100%; height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* The Surprise Message - High End Glow */
+        #message {
+            position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            text-align: center; z-index: 1000; opacity: 0;
+            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
-            transition: all 2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .boom-active .surprise-core {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
+        .boom-active #message { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
         h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(3rem, 12vw, 5rem);
-            color: var(--pink);
-            margin: 0;
-            text-shadow: 0 0 30px rgba(255, 77, 109, 0.5);
+            font-size: clamp(3rem, 15vw, 6rem); color: var(--accent); margin: 0;
+            filter: drop-shadow(0 0 20px var(--accent));
         }
 
-        /* Polaroid Memory Cards */
-        .memory-card {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 220px;
-            background: white;
-            padding: 10px 10px 35px 10px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            border-radius: 4px;
-            transform-style: preserve-3d;
-            transition: transform 4s cubic-bezier(0.1, 0.8, 0.2, 1), opacity 2s ease;
-            opacity: 0;
-            margin-left: -110px;
-            margin-top: -130px;
+        /* Cinematic Photo Cards */
+        .card {
+            position: absolute; width: 220px; height: 280px;
+            background: #fff; padding: 10px; padding-bottom: 40px;
+            box-shadow: 0 0 40px rgba(0,0,0,1);
+            border-radius: 2px; transform-style: preserve-3d;
+            opacity: 0; transition: opacity 1s, transform 2s;
         }
 
-        .memory-card img {
-            width: 100%; height: auto;
-            display: block;
-            border-radius: 2px;
+        .card img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Flare Effect */
+        #flash {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #fff, var(--accent), #000);
+            z-index: 2000; opacity: 0; pointer-events: none;
         }
 
-        /* Surprise Elements */
-        #flash-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: white;
-            z-index: 5000;
-            opacity: 0;
-            pointer-events: none;
+        /* Heart Vortex */
+        .vortex-heart {
+            position: absolute; color: var(--accent);
+            pointer-events: none; font-size: 20px;
         }
 
-        #relive-btn {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 30px;
-            background: transparent;
-            border: 2px solid var(--pink);
-            color: var(--pink);
-            border-radius: 50px;
-            cursor: pointer;
-            opacity: 0;
-            transition: 1s;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            z-index: 6000;
-            font-weight: 600;
+        #reload {
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            background: none; border: 1px solid var(--accent); color: var(--accent);
+            padding: 10px 30px; border-radius: 50px; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 4px; font-size: 10px;
+            opacity: 0; transition: 2s; z-index: 3000;
         }
 
-        .boom-active #relive-btn { opacity: 1; }
+        .boom-active #reload { opacity: 1; }
 
-        .magic-heart {
-            position: absolute;
-            color: var(--pink);
-            pointer-events: none;
-            z-index: 1500;
-        }
-
-        @media (max-width: 600px) { .memory-card { width: 150px; margin-left: -75px; } }
+        @media (max-width: 600px) { .card { width: 140px; height: 180px; } }
     </style>
 </head>
-<body id="master-body">
+<body>
 
-    <div id="flash-screen"></div>
+<div id="flash"></div>
+<div id="message">
+    <h1>Our Forever</h1>
+    <p style="letter-spacing: 10px; font-weight: 300;">THE MASTERPIECE OF MY LIFE</p>
+</div>
+<button id="reload" onclick="location.reload()">Reset Timeline</button>
 
-    <div class="surprise-core">
-        <h1>Forever & Always</h1>
-        <p style="color:white; letter-spacing: 5px; font-weight:300; margin-top:20px;">OUR JOURNEY IS MY FAVORITE STORY</p>
-    </div>
+<div id="viewport">
+    <div id="world"></div>
+</div>
 
-    <button id="relive-btn" onclick="location.reload()">Relive the Magic</button>
+<script>
+    const world = document.getElementById('world');
+    const flash = document.getElementById('flash');
+    const msg = document.getElementById('message');
+    const total = 20;
+    let current = 20;
+    let cards = [];
 
-    <div id="scene-3d"></div>
-
-    <script>
-        const scene = document.getElementById('scene-3d');
-        const flash = document.getElementById('flash-screen');
-        const body = document.getElementById('master-body');
-        let currentImage = 20;
-        const totalImages = 20;
-        let cardList = [];
-
-        function spawnMemory() {
-            if (currentImage < 1) return;
-
-            const card = document.createElement('div');
-            card.className = 'memory-card';
-            const img = document.createElement('img');
-            img.src = `${currentImage}.jpeg`;
-            img.onerror = () => card.remove();
-            
-            card.appendChild(img);
-            scene.appendChild(card);
-            cardList.push(card);
-
-            // MATH FOR THE ORBIT (Prevents stacking)
-            // Distribute 20 images in a full 360-degree circle
-            const angle = (currentImage / totalImages) * Math.PI * 2;
-            const radiusX = window.innerWidth > 600 ? 450 : 280;
-            const radiusY = window.innerWidth > 600 ? 300 : 200;
-            
-            const posX = Math.cos(angle) * radiusX;
-            const posY = Math.sin(angle) * radiusY;
-            const posZ = (Math.random() - 0.5) * 400; // Slight depth variation
-
-            // Start from the "Void" (Center, deep back)
-            card.style.transform = `translate3d(0, 0, -3000px) rotateY(180deg)`;
-
-            // Travel to its specific orbit point
-            setTimeout(() => {
-                card.style.opacity = "1";
-                const rotZ = (Math.random() - 0.5) * 30;
-                card.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px) rotateZ(${rotZ}deg)`;
-            }, 150);
-
-            currentImage--;
-
-            if (currentImage >= 1) {
-                setTimeout(spawnMemory, 2000); // Time between images
-            } else {
-                setTimeout(triggerTheBoom, 5000); // Time before final explosion
-            }
+    function buildHelix() {
+        if (current < 1) {
+            setTimeout(triggerBoom, 4000);
+            return;
         }
 
-        function triggerTheBoom() {
-            // 1. Bright Flash
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `<img src="${current}.jpeg">`;
+        world.appendChild(card);
+        cards.push(card);
+
+        // HELIX MATH: Distributes cards in a vertical 3D spiral
+        const theta = (total - current) * 0.5; // Spiral rotation
+        const y = (current - total / 2) * 120; // Vertical spacing
+        const radius = window.innerWidth > 600 ? 500 : 300;
+        
+        const x = Math.cos(theta) * radius;
+        const z = Math.sin(theta) * radius;
+
+        // Animate from center to helix position
+        setTimeout(() => {
+            card.style.opacity = "1";
+            card.style.transform = `translate3d(${x}px, ${y}px, ${z}px) rotateY(${-theta}rad)`;
+        }, 100);
+
+        // Slow cinematic rotation of the whole world as we add photos
+        world.style.transform = `rotateY(${(total - current) * 10}deg)`;
+
+        current--;
+        setTimeout(buildHelix, 1500);
+    }
+
+    function triggerBoom() {
+        // Fly-through effect
+        world.style.transition = "transform 1.5s cubic-bezier(0.7, 0, 0.3, 1)";
+        world.style.transform = "translateZ(2000px) rotateY(180deg)";
+        
+        setTimeout(() => {
             flash.style.opacity = "1";
             
             setTimeout(() => {
-                // 2. Clear Images (The Shatter)
-                cardList.forEach((card) => {
-                    const shatterX = (Math.random() - 0.5) * 5000;
-                    const shatterY = (Math.random() - 0.5) * 5000;
-                    card.style.transition = "transform 1.2s ease-in, opacity 1s";
-                    card.style.transform = `translate3d(${shatterX}px, ${shatterY}px, 2000px) rotateX(720deg)`;
-                    card.style.opacity = "0";
-                });
-
-                // 3. Transform Environment
-                body.style.background = "radial-gradient(circle, #3d0510 0%, #000 100%)";
-                body.classList.add('boom-active');
+                world.innerHTML = '';
+                document.body.style.background = "radial-gradient(circle, #220000 0%, #000 100%)";
+                document.body.classList.add('boom-active');
                 flash.style.opacity = "0";
+                
+                // Start Vortex
+                setInterval(spawnVortexHeart, 50);
+            }, 500);
+        }, 1000);
+    }
 
-                // 4. Infinite Heart Fountain
-                setInterval(spawnMagicHeart, 80);
-            }, 600);
-        }
+    function spawnVortexHeart() {
+        const h = document.createElement('div');
+        h.className = 'vortex-heart';
+        h.innerHTML = '❤';
+        h.style.left = '50%'; h.style.top = '50%';
+        document.body.appendChild(h);
 
-        function spawnMagicHeart() {
-            const h = document.createElement('div');
-            h.className = 'magic-heart';
-            h.innerHTML = '❤';
-            h.style.left = '50%';
-            h.style.top = '50%';
-            h.style.fontSize = (Math.random() * 25 + 10) + 'px';
-            document.body.appendChild(h);
+        const angle = Math.random() * Math.PI * 2;
+        const dist = Math.random() * 1000 + 500;
+        
+        const anim = h.animate([
+            { transform: `translate(-50%, -50%) rotate(0deg) scale(0)`, opacity: 1 },
+            { transform: `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist}px) rotate(720deg) scale(2)`, opacity: 0 }
+        ], { duration: 3000, easing: 'ease-out' });
 
-            const destX = (Math.random() - 0.5) * window.innerWidth * 2;
-            const destY = (Math.random() - 0.5) * window.innerHeight * 2;
+        anim.onfinish = () => h.remove();
+    }
 
-            const anim = h.animate([
-                { transform: 'translate(-50%, -50%) scale(0)', opacity: 1 },
-                { transform: `translate(${destX}px, ${destY}px) scale(2.5) rotate(360deg)`, opacity: 0 }
-            ], { duration: 3500, easing: 'ease-out' });
-
-            anim.onfinish = () => h.remove();
-        }
-
-        // Start the dynamic sequence
-        spawnMemory();
-    </script>
+    buildHelix();
+</script>
 </body>
 </html>
