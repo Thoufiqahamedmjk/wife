@@ -3,221 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Love Story | Forever</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <title>Our Eternal Memories</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --pink: #ff4d6d;
-            --deep-rose: #c9184a;
+            --white: #ffffff;
         }
 
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
             overflow: hidden;
-            background: #fff;
-            transition: background 3s ease;
+            background: #000;
+            transition: background 4s ease;
             font-family: 'Montserrat', sans-serif;
+            perspective: 2000px;
         }
 
-        /* The Surprise Flash */
-        #flash-overlay {
+        #flash {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: white;
-            z-index: 2000;
+            z-index: 5000;
             opacity: 0;
             pointer-events: none;
         }
 
-        .flash-active {
-            animation: flashAnim 1s ease-out forwards;
+        #world {
+            position: relative;
+            width: 100%; height: 100%;
+            transform-style: preserve-3d;
         }
 
-        @keyframes flashAnim {
-            0% { opacity: 0; }
-            50% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
-        /* Center Message - The Surprise */
-        .center-content {
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0.5);
-            text-align: center;
-            z-index: 1000;
-            width: 85%;
-            max-width: 500px;
-            padding: 40px 20px;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: none;
-        }
-
-        .boom-active .center-content {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: clamp(2.5rem, 10vw, 4.5rem);
-            color: var(--pink);
-            margin: 0;
-        }
-
-        #special-note {
-            font-size: 1.1rem;
-            color: #444;
-            letter-spacing: 2px;
-            margin-top: 20px;
-            line-height: 1.6;
-            font-weight: 300;
-        }
-
-        /* Memory Cards */
+        /* Polaroid Cards */
         .card {
             position: absolute;
-            bottom: -600px;
-            width: 260px;
+            top: 50%; left: 50%;
+            width: 240px;
             background: white;
             padding: 12px 12px 40px 12px;
-            box-shadow: 0 15px 45px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             border-radius: 4px;
-            z-index: 10;
+            transform-style: preserve-3d;
+            transition: transform 5s cubic-bezier(0.1, 0.8, 0.2, 1), opacity 2s ease;
+            opacity: 0;
+            margin-left: -120px;
+            margin-top: -150px;
         }
 
         .card img { width: 100%; height: auto; display: block; border-radius: 2px; }
 
-        @keyframes floatUpwards {
-            0% { bottom: -600px; opacity: 0; transform: rotate(var(--r)); }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { bottom: 120%; opacity: 0; transform: translateX(var(--d)) rotate(calc(var(--r) + 25deg)); }
+        /* The Surprise Message */
+        .surprise {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            text-align: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .animate { animation: floatUpwards 20s linear forwards; }
+        .boom-active .surprise { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
-        /* Heart Rain */
-        .falling-heart {
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(3rem, 15vw, 6rem);
+            color: var(--pink);
+            margin: 0;
+            text-shadow: 0 0 30px rgba(255, 77, 109, 0.6);
+        }
+
+        p { color: white; letter-spacing: 8px; font-size: 0.9rem; margin-top: 20px; text-transform: uppercase; }
+
+        /* Restart Button */
+        #restart-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 25px;
+            background: transparent;
+            border: 1px solid var(--pink);
+            color: var(--pink);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            cursor: pointer;
+            z-index: 3000;
+            opacity: 0;
+            transition: all 1s ease;
+            text-transform: uppercase;
+            border-radius: 50px;
+        }
+
+        #restart-btn:hover { background: var(--pink); color: white; box-shadow: 0 0 20px var(--pink); }
+
+        /* Heart Particles */
+        .heart-particle {
             position: absolute;
             color: var(--pink);
-            z-index: 500;
             pointer-events: none;
-            top: -50px;
+            z-index: 1500;
+            font-size: 20px;
         }
 
-        @media (max-width: 600px) { .card { width: 170px; } }
+        @media (max-width: 600px) { .card { width: 160px; margin-left: -80px; } }
     </style>
 </head>
-<body id="main-body">
+<body id="main">
 
-    <div id="flash-overlay"></div>
+    <div id="flash"></div>
 
-    <div class="center-content">
-        <h1>You are my Forever</h1>
-        <div id="special-note">
-            Every memory we've made is a treasure <br>
-            I carry in my heart. <br>
-            <b>I love you!</b>
-        </div>
+    <div class="surprise">
+        <h1>Forever Yours</h1>
+        <p>You are my favorite memory</p>
     </div>
 
-    <div id="gallery"></div>
+    <button id="restart-btn" onclick="restartJourney()">Relive the Magic</button>
+
+    <div id="world"></div>
 
     <script>
-        const gallery = document.getElementById('gallery');
-        const flash = document.getElementById('flash-overlay');
-        const body = document.getElementById('main-body');
+        const world = document.getElementById('world');
+        const flash = document.getElementById('flash');
+        const body = document.getElementById('main');
+        const restartBtn = document.getElementById('restart-btn');
+        
         let current = 20;
-        let activeStream = true;
+        let cardElements = [];
+        let heartInterval;
 
-        // Function for the heart rain after the "Boom"
-        function rainHeart() {
+        function createHeart() {
             const h = document.createElement('div');
-            h.className = 'falling-heart';
+            h.className = 'heart-particle';
             h.innerHTML = '❤';
-            h.style.left = Math.random() * 100 + 'vw';
-            const size = (Math.random() * 25 + 15) + 'px';
-            h.style.fontSize = size;
-            h.style.opacity = Math.random();
-            
-            const duration = Math.random() * 3 + 3;
-            h.style.transition = `transform ${duration}s linear, opacity ${duration}s`;
-            
+            h.style.left = '50vw';
+            h.style.top = '50vh';
             document.body.appendChild(h);
 
-            setTimeout(() => {
-                h.style.transform = `translateY(110vh) rotate(${Math.random() * 360}deg)`;
-                h.style.opacity = '0';
-            }, 100);
+            const destX = (Math.random() - 0.5) * window.innerWidth * 2.5;
+            const destY = (Math.random() - 0.5) * window.innerHeight * 2.5;
 
-            setTimeout(() => h.remove(), duration * 1000);
-        }
+            const animation = h.animate([
+                { transform: 'translate(-50%, -50%) scale(0)', opacity: 1 },
+                { transform: `translate(${destX}px, ${destY}px) scale(2) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+            ], {
+                duration: Math.random() * 3000 + 2000,
+                easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)'
+            });
 
-        function triggerMagic() {
-            activeStream = false;
-            
-            // 1. Flash
-            flash.classList.add('flash-active');
-            
-            // 2. Clear images and change background after flash peaks
-            setTimeout(() => {
-                gallery.innerHTML = '';
-                body.classList.add('boom-active');
-                body.style.background = 'radial-gradient(circle, #ffffff 0%, #ffcbd1 100%)';
-                
-                // 3. Start Heart Explosion
-                for(let i=0; i<80; i++) {
-                    setTimeout(rainHeart, i * 60);
-                }
-                // Continue soft rain
-                setInterval(rainHeart, 400);
-            }, 500);
+            animation.onfinish = () => h.remove();
         }
 
         function spawnMemory() {
-            if (!activeStream) return;
+            if (current < 1) return;
 
             const card = document.createElement('div');
-            card.className = 'card animate';
-            
-            const r = (Math.random() * 30 - 15) + 'deg';
-            const d = (Math.random() * 180 - 90) + 'px';
-            
-            // Keep center clear for the surprise
-            let randomX = Math.random() > 0.5 ? (Math.random() * 20) : (Math.random() * 20 + 60);
-            card.style.left = randomX + 'vw';
-            
-            card.style.setProperty('--r', r);
-            card.style.setProperty('--d', d);
-
+            card.className = 'card';
             const img = document.createElement('img');
             img.src = `${current}.jpeg`;
             img.onerror = () => card.remove();
-
+            
             card.appendChild(img);
-            gallery.appendChild(card);
+            world.appendChild(card);
+            cardElements.push(card);
 
-            // If we hit the last image, wait for it to float up a bit then BOOM
-            if(current === 1) {
-                setTimeout(triggerMagic, 5000);
-                return; // Stop spawning after 1.jpeg
-            }
+            card.style.transform = `translate3d(${(Math.random()-0.5)*1500}px, ${(Math.random()-0.5)*1500}px, -3000px)`;
+
+            setTimeout(() => {
+                const tx = (Math.random() - 0.5) * window.innerWidth * 0.7;
+                const ty = (Math.random() - 0.5) * window.innerHeight * 0.7;
+                const tz = Math.random() * 500;
+                const rot = (Math.random() - 0.5) * 40;
+                card.style.opacity = "1";
+                card.style.transform = `translate3d(${tx}px, ${ty}px, ${tz}px) rotateZ(${rot}deg)`;
+            }, 100);
 
             current--;
-            setTimeout(spawnMemory, 4000);
+            if (current >= 1) {
+                setTimeout(spawnMemory, 3800);
+            } else {
+                setTimeout(triggerBoom, 5500);
+            }
         }
 
-        // Initialize the memory stream
+        function triggerBoom() {
+            flash.style.opacity = "1";
+            setTimeout(() => {
+                cardElements.forEach(card => {
+                    card.style.transition = "all 1.5s ease-in";
+                    card.style.transform = `translate3d(${(Math.random()-0.5)*4000}px, ${(Math.random()-0.5)*4000}px, 1500px) rotateX(360deg)`;
+                    card.style.opacity = "0";
+                });
+                body.style.background = "radial-gradient(circle, #2d0a10 0%, #000000 100%)";
+                body.classList.add('boom-active');
+                flash.style.opacity = "0";
+                heartInterval = setInterval(createHeart, 70);
+                setTimeout(() => { restartBtn.style.opacity = "1"; }, 5000);
+            }, 600);
+        }
+
+        function restartJourney() {
+            // Reset everything
+            clearInterval(heartInterval);
+            current = 20;
+            cardElements = [];
+            world.innerHTML = '';
+            body.classList.remove('boom-active');
+            body.style.background = "#000";
+            restartBtn.style.opacity = "0";
+            
+            // Remove existing heart particles
+            document.querySelectorAll('.heart-particle').forEach(h => h.remove());
+            
+            // Start again
+            spawnMemory();
+        }
+
         spawnMemory();
     </script>
 </body>
