@@ -1,100 +1,117 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>System Error: Gravity Failure</title>
+    <title>⚠️ CRITICAL SECURITY CLEARANCE ⚠️</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js"></script>
     <style>
-        body { margin: 0; overflow: hidden; font-family: 'Courier New', monospace; background: #050505; color: #00f2ff; }
-        .physics-element { 
-            position: absolute; padding: 15px; background: #111; 
-            border: 2px solid #00f2ff; border-radius: 4px;
-            user-select: none; cursor: crosshair; font-weight: bold;
-            box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
-            transition: background 0.3s;
-        }
-        .physics-element:active { background: #00f2ff; color: #000; }
-        #status-bar { position: fixed; top: 0; width: 100%; background: #00f2ff; color: #000; padding: 5px; text-align: center; font-size: 0.8rem; font-weight: bold; z-index: 10; }
+        body { background: #000; color: #ff3366; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
+        #terminal { width: 80%; max-width: 500px; margin: 10% auto; border: 1px solid #ff3366; padding: 20px; background: rgba(20, 0, 0, 0.9); box-shadow: 0 0 15px #ff3366; }
+        .clause { margin: 10px 0; font-size: 0.9rem; color: #fff; display: none; }
+        .btn-container { display: flex; justify-content: space-around; margin-top: 20px; }
+        button { padding: 10px 20px; font-weight: bold; cursor: pointer; border: none; }
+        #accept-btn { background: #ff3366; color: white; position: relative; }
+        #decline-btn { background: #444; color: #888; }
+        #love-rain { position: fixed; top: 0; left: 0; pointer-events: none; }
     </style>
 </head>
 <body>
 
-    <div id="status-bar">CORE STABILITY: 0.02% | THREAT LEVEL: WIFE_DETECTION_O_METER</div>
+<div id="terminal">
+    <div id="log"></div>
+    <div id="clauses">
+        <div class="clause" id="c1">✅ Clause 1: Husband is always right (except when he's wrong).</div>
+        <div class="clause" id="c2">✅ Clause 2: Wife must provide 1 forehead kiss per 10 lines of code.</div>
+        <div class="clause" id="c3">✅ Clause 3: 50% of your fries belong to the Husband.</div>
+    </div>
+    <div id="final-ask" style="display:none; margin-top:20px;">
+        <p>DO YOU ACCEPT THESE TERMS, MY BEAUTIFUL WIFE?</p>
+        <div class="btn-container">
+            <button id="decline-btn" onmouseover="hideDecline()">DECLINE</button>
+            <button id="accept-btn" onclick="celebrate()">I ACCEPT</button>
+        </div>
+    </div>
+</div>
 
-    <div class="physics-element" onclick="victory(this)" style="top:20%; left:40%;">[REDACTED COMPLIMENT]</div>
-    <div class="physics-element" onclick="victory(this)" style="top:40%; left:20%;">SECRET_VALENTINE.EXE</div>
-    <div class="physics-element" onclick="victory(this)" style="top:45%; left:60%;">CRITICAL_HUG_UPDATE</div>
-    <div class="physics-element" onclick="victory(this)" style="top:60%; left:30%;">DO_NOT_CLICK.zip</div>
-    <div class="physics-element" onclick="victory(this)" style="top:75%; left:50%;">CAUTION: BEHOLD BEAUTY</div>
+<script>
+    const log = document.getElementById('log');
+    const terminalLines = [
+        "> INITIALIZING LOVE_PROTOCOL_v6.9...",
+        "> SCANNING FOR THE WORLD'S BEST WIFE...",
+        "> [FOUND]: TARGET LOCATED AT THIS IP.",
+        "> GENERATING LEGAL HOUSEHOLD CLAUSES..."
+    ];
 
-    <script>
-        const { Engine, Runner, World, Bodies, Body, Vector } = Matter;
-        const engine = Engine.create();
-        const world = engine.world;
-        const elements = document.querySelectorAll('.physics-element');
-        const physicsBodies = [];
-        let mousePos = { x: -1000, y: -1000 };
-
-        // Initialize Physics Bodies
-        elements.forEach(el => {
-            const rect = el.getBoundingClientRect();
-            const body = Bodies.rectangle(rect.left + rect.width/2, rect.top + rect.height/2, rect.width, rect.height, {
-                restitution: 0.8, frictionAir: 0.04
-            });
-            physicsBodies.push({ el, body, captured: false });
-            World.add(world, body);
-        });
-
-        // Add Boundaries
-        World.add(world, [
-            Bodies.rectangle(window.innerWidth/2, -25, window.innerWidth, 50, { isStatic: true }),
-            Bodies.rectangle(window.innerWidth/2, window.innerHeight+25, window.innerWidth, 50, { isStatic: true }),
-            Bodies.rectangle(-25, window.innerHeight/2, 50, window.innerHeight, { isStatic: true }),
-            Bodies.rectangle(window.innerWidth+25, window.innerHeight/2, 50, window.innerHeight, { isStatic: true })
-        ]);
-
-        Runner.run(engine);
-
-        window.addEventListener('mousemove', (e) => {
-            mousePos.x = e.clientX;
-            mousePos.y = e.clientY;
-        });
-
-        // Victory Logic
-        function victory(el) {
-            const entry = physicsBodies.find(p => p.el === el);
-            entry.captured = true;
-            el.style.background = "#ff4757";
-            el.style.borderColor = "#fff";
-            el.style.color = "#fff";
-            el.innerText = "❤️ ENNA SEARCH PANDRA POI VELLAIYA PARU :-)  I LOVE YOU! ❤️";
-            
-            // Explosion effect: push everything else away
-            physicsBodies.forEach(p => {
-                if(!p.captured) {
-                    Body.applyForce(p.body, p.body.position, Vector.mult(Vector.normalise(Vector.sub(p.body.position, entry.body.position)), 0.2));
-                }
-            });
+    let line = 0;
+    function type() {
+        if(line < terminalLines.length) {
+            log.innerHTML += terminalLines[line] + "<br>";
+            line++;
+            setTimeout(type, 800);
+        } else {
+            showClauses();
         }
+    }
 
-        (function update() {
-            physicsBodies.forEach(({ el, body, captured }) => {
-                if (!captured) {
-                    let distance = Vector.magnitude(Vector.sub(body.position, mousePos));
-                    if (distance < 180) {
-                        // Anti-gravity repulsion
-                        let force = Vector.mult(Vector.normalise(Vector.sub(body.position, mousePos)), 0.05);
-                        Body.applyForce(body, body.position, force);
-                    }
-                } else {
-                    // Captured items float gently
-                    Body.setVelocity(body, { x: 0, y: -0.5 });
-                }
+    function showClauses() {
+        let i = 1;
+        const interval = setInterval(() => {
+            const c = document.getElementById('c' + i);
+            if(c) { c.style.display = 'block'; i++; }
+            else { 
+                clearInterval(interval);
+                document.getElementById('final-ask').style.display = 'block';
+                startChasing();
+            }
+        }, 1000);
+    }
 
-                el.style.transform = `translate(${body.position.x - el.offsetWidth/2}px, ${body.position.y - el.offsetHeight/2}px) rotate(${body.angle}rad)`;
-                el.style.left = "0px"; el.style.top = "0px";
-            });
-            requestAnimationFrame(update);
-        })();
-    </script>
+    function startChasing() {
+        const btn = document.getElementById('accept-btn');
+        btn.onmouseover = () => {
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 50);
+            btn.style.position = 'fixed';
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+            btn.innerText = "CATCH ME! ❤️";
+        };
+    }
+
+    function hideDecline() {
+        const d = document.getElementById('decline-btn');
+        d.innerText = "NOT AN OPTION";
+        d.style.opacity = "0.2";
+    }
+
+    function celebrate() {
+        document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20vh;'>CONTRACT SIGNED! ❤️<br><br>Preparing your lifetime supply of hugs...</h1>";
+        document.body.style.background = "#ff3366";
+        
+        // Physics-based Heart Rain
+        const { Engine, Render, Runner, World, Bodies } = Matter;
+        const engine = Engine.create();
+        const runner = Runner.run(engine);
+        
+        for(let i=0; i<50; i++) {
+            const heart = document.createElement('div');
+            heart.innerHTML = "❤️";
+            heart.style.position = "absolute";
+            heart.style.fontSize = (Math.random() * 30 + 10) + "px";
+            document.body.appendChild(heart);
+
+            const body = Bodies.rectangle(Math.random()*window.innerWidth, -100, 30, 30);
+            World.add(engine.world, body);
+
+            (function update() {
+                heart.style.left = body.position.x + "px";
+                heart.style.top = body.position.y + "px";
+                heart.style.transform = `rotate(${body.angle}rad)`;
+                requestAnimationFrame(update);
+            })();
+        }
+    }
+
+    type();
+</script>
 </body>
 </html>
