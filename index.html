@@ -3,32 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Infinite Journey</title>
+    <title>Our Infinite Love</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@200;900&display=swap" rel="stylesheet">
     <style>
-        :root { --pink: #ff4d6d; --gold: #ffb703; }
+        :root { --pink: #ff4d6d; --soft-pink: #ffb3c1; --deep-red: #c9184a; }
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: #000; overflow: hidden; color: #fff;
+            background: #0a0002; overflow: hidden; color: #fff;
             font-family: 'Montserrat', sans-serif;
         }
 
-        /* The 3D Warp Tunnel */
+        /* Atmospheric Pink Mist */
+        #bg-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(255, 77, 109, 0.15) 0%, transparent 70%);
+            z-index: 1; pointer-events: none;
+        }
+
+        /* 3D Warp Tunnel */
         #container {
             position: absolute; width: 100%; height: 100%;
-            perspective: 800px; overflow: hidden;
+            perspective: 1000px; overflow: hidden;
             display: flex; align-items: center; justify-content: center;
+            z-index: 10;
         }
 
         .photo-gate {
-            position: absolute; width: 300px; height: 400px;
-            background: #fff; padding: 10px; padding-bottom: 50px;
-            box-shadow: 0 0 50px rgba(255, 77, 109, 0.4);
+            position: absolute; width: 280px; height: 380px;
+            background: #fff; padding: 12px; padding-bottom: 50px;
+            box-shadow: 0 0 40px rgba(255, 77, 109, 0.6), inset 0 0 20px rgba(255, 77, 109, 0.2);
             transform-style: preserve-3d;
+            border: 2px solid var(--soft-pink);
             opacity: 0;
         }
 
         .photo-gate img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Tiny Heart Particle */
+        .tiny-heart {
+            position: absolute; color: var(--pink);
+            font-size: 14px; pointer-events: none; z-index: 5;
+            text-shadow: 0 0 5px var(--pink);
+        }
 
         /* The Surprise Boom Message */
         #final-stage {
@@ -40,43 +56,43 @@
 
         .glow-text {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(4rem, 20vw, 8rem);
-            background: linear-gradient(45deg, var(--pink), #fff, var(--pink));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 30px var(--pink));
-            animation: pulse 2s infinite alternate;
+            font-size: clamp(4rem, 18vw, 7.5rem);
+            color: #fff;
+            text-shadow: 0 0 20px var(--pink), 0 0 40px var(--deep-red);
+            animation: pulse 2.5s infinite alternate;
         }
 
         @keyframes pulse {
-            from { transform: scale(1); filter: drop-shadow(0 0 20px var(--pink)); }
-            to { transform: scale(1.05); filter: drop-shadow(0 0 50px var(--pink)); }
+            from { transform: scale(1); opacity: 0.9; }
+            to { transform: scale(1.08); opacity: 1; }
         }
 
-        /* Explosion Canvas */
+        /* Supernova Canvas */
         #canvas { position: fixed; top: 0; left: 0; z-index: 500; pointer-events: none; }
 
         #reset {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: none; border: 1px solid rgba(255,255,255,0.3); color: #fff;
-            padding: 10px 20px; border-radius: 2px; cursor: pointer;
-            letter-spacing: 5px; font-size: 10px; z-index: 2000;
+            background: rgba(255, 77, 109, 0.1); border: 1px solid var(--pink); color: var(--pink);
+            padding: 12px 25px; border-radius: 50px; cursor: pointer;
+            letter-spacing: 4px; font-size: 10px; z-index: 2000; transition: 0.3s;
         }
+        #reset:hover { background: var(--pink); color: white; }
 
-        @media (max-width: 600px) { .photo-gate { width: 180px; height: 240px; } }
+        @media (max-width: 600px) { .photo-gate { width: 170px; height: 230px; } }
     </style>
 </head>
 <body>
 
+<div id="bg-glow"></div>
 <canvas id="canvas"></canvas>
 <div id="container"></div>
 
 <div id="final-stage">
-    <h1 class="glow-text">Always You</h1>
-    <p style="letter-spacing: 12px; font-size: 12px; opacity: 0.7;">BEYOND TIME & SPACE</p>
+    <h1 class="glow-text">You & Me</h1>
+    <p style="letter-spacing: 10px; font-size: 11px; color: var(--soft-pink);">FOREVER STARTS NOW</p>
 </div>
 
-<button id="reset" onclick="location.reload()">RESTART TIMELINE</button>
+<button id="reset" onclick="location.reload()">RELIVE THE MOMENT</button>
 
 <script>
     const container = document.getElementById('container');
@@ -89,7 +105,25 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // Cinematic Fly-Through Logic
+    // Background Atmosphere: Spawning tiny drifting hearts
+    function spawnTinyHeart() {
+        const h = document.createElement('div');
+        h.className = 'tiny-heart';
+        h.innerHTML = '❤';
+        h.style.left = Math.random() * 100 + 'vw';
+        h.style.top = '110vh';
+        h.style.opacity = Math.random();
+        document.body.appendChild(h);
+
+        const duration = Math.random() * 4000 + 3000;
+        h.animate([
+            { transform: `translateY(0) rotate(0deg)`, opacity: 0.8 },
+            { transform: `translateY(-120vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+        ], { duration: duration, easing: 'linear' }).onfinish = () => h.remove();
+    }
+    setInterval(spawnTinyHeart, 250);
+
+    // Cinematic Warp Logic
     function flyPast() {
         if (current < 1) {
             setTimeout(boom, 2000);
@@ -101,89 +135,77 @@
         gate.innerHTML = `<img src="${current}.jpeg">`;
         container.appendChild(gate);
 
-        // Position images alternately left and right to create a "path"
         const side = current % 2 === 0 ? -1 : 1;
-        const xOffset = side * (window.innerWidth * 0.3);
-        const yOffset = (Math.random() - 0.5) * 200;
+        const xOffset = side * (window.innerWidth * 0.25);
+        const yOffset = (Math.random() - 0.5) * 300;
 
-        // ANIMATION: Fly from deep back to past the camera
         const anim = gate.animate([
-            { transform: `translate3d(${xOffset}px, ${yOffset}px, -2000px) rotateY(${side * 45}deg)`, opacity: 0 },
-            { transform: `translate3d(${xOffset}px, ${yOffset}px, -1000px) rotateY(${side * 20}deg)`, opacity: 1, offset: 0.2 },
-            { transform: `translate3d(${xOffset}px, ${yOffset}px, 1000px) rotateY(${side * -10}deg)`, opacity: 0 }
+            { transform: `translate3d(${xOffset}px, ${yOffset}px, -2500px) rotateY(${side * 60}deg)`, opacity: 0 },
+            { transform: `translate3d(${xOffset}px, ${yOffset}px, -800px) rotateY(${side * 30}deg)`, opacity: 1, offset: 0.3 },
+            { transform: `translate3d(${xOffset}px, ${yOffset}px, 1200px) rotateY(${side * -20}deg)`, opacity: 0 }
         ], {
-            duration: 5000,
+            duration: 6000,
             easing: 'linear'
         });
 
         anim.onfinish = () => gate.remove();
 
         current--;
-        setTimeout(flyPast, 1200);
+        setTimeout(flyPast, 1400);
     }
 
     function boom() {
-        // Flash explosion
-        ctx.fillStyle = 'white';
+        // Flash explosion in Pink
+        ctx.fillStyle = '#ff4d6d';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
         setTimeout(() => {
             container.style.display = 'none';
             finalStage.style.display = 'block';
+            document.body.style.background = 'radial-gradient(circle, #4a0010 0%, #050001 100%)';
             initParticles();
             animateParticles();
-        }, 100);
+        }, 150);
     }
 
-    // High-end Constellation Effect
+    // Pro Heart Particles for the Finale
     class Particle {
         constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.vx = (Math.random() - 0.5) * 2;
-            this.vy = (Math.random() - 0.5) * 2;
-            this.size = Math.random() * 2;
+            this.x = canvas.width / 2;
+            this.y = canvas.height / 2;
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 4 + 1;
+            this.vx = Math.cos(angle) * speed;
+            this.vy = Math.sin(angle) * speed;
+            this.size = Math.random() * 15 + 5;
+            this.alpha = 1;
         }
         update() {
             this.x += this.vx;
             this.y += this.vy;
-            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            this.alpha -= 0.005;
         }
         draw() {
+            ctx.globalAlpha = this.alpha;
             ctx.fillStyle = '#ff4d6d';
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.font = `${this.size}px serif`;
+            ctx.fillText('❤', this.x, this.y);
         }
     }
 
     function initParticles() {
-        for (let i = 0; i < 150; i++) particles.push(new Particle());
+        setInterval(() => {
+            if(particles.length < 100) particles.push(new Particle());
+        }, 50);
     }
 
     function animateParticles() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles = particles.filter(p => p.alpha > 0);
         particles.forEach(p => {
             p.update();
             p.draw();
         });
-        // Draw lines between nearby particles for constellation look
-        for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-                let dx = particles[i].x - particles[j].x;
-                let dy = particles[i].y - particles[j].y;
-                let dist = Math.sqrt(dx*dx + dy*dy);
-                if (dist < 100) {
-                    ctx.strokeStyle = `rgba(255, 77, 109, ${1 - dist/100})`;
-                    ctx.lineWidth = 0.5;
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.stroke();
-                }
-            }
-        }
         requestAnimationFrame(animateParticles);
     }
 
