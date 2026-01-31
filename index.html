@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Urgent Message</title>
+    <style>
+        body { display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; background: #f0f0f0; }
+        #prank-box { text-align: center; padding: 50px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        button { padding: 15px 30px; font-size: 1.2rem; cursor: pointer; border: none; border-radius: 10px; background: #ff4757; color: white; }
+    </style>
+</head>
+<body>
+    <div id="prank-box">
+        <h1>Do you love your husband?</h1>
+        <button id="noBtn" onmouseover="moveButton()">NO</button>
+        <button onclick="alert('I knew it! ❤️')">YES</button>
+    </div>
+
+    <script>
+        function moveButton() {
+            const btn = document.getElementById('noBtn');
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            btn.style.position = 'absolute';
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+        }
+    </script>
+</body>
+</html>
