@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Timeless Memories</title>
+    <title> Love Story | Memories</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <style>
         :root {
             --soft-pink: #ffe5ec;
             --deep-rose: #ff4d6d;
-            --overlay: rgba(255, 255, 255, 0.8);
+            --text-gray: #555;
         }
 
         body, html {
@@ -17,172 +17,182 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden; /* Prevents manual scrolling to keep the focus on the animation */
-            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+            overflow: hidden; 
+            background: linear-gradient(180deg, #fffafa 0%, #f9e4e8 100%);
             font-family: 'Montserrat', sans-serif;
         }
 
-        /* Floating Background Elements */
+        /* Ambient Hearts in Background */
         .heart-bg {
             position: absolute;
-            color: rgba(255, 77, 109, 0.1);
-            font-size: 2rem;
+            color: rgba(255, 77, 109, 0.15);
             user-select: none;
             z-index: 0;
+            pointer-events: none;
         }
 
+        /* Fixed Center Title */
         .header {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            z-index: 10;
-            pointer-events: none; /* Allows clicking "through" the text */
+            z-index: 1;
+            width: 90%;
+            pointer-events: none;
         }
 
         h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: 4rem;
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
             color: var(--deep-rose);
             margin: 0;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+            text-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
         p {
-            font-size: 1rem;
-            letter-spacing: 5px;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            color: #777;
+            color: #888;
+            margin-top: 10px;
         }
 
-        /* The Memory Card Style */
+        /* The Memory Card */
         .memory-card {
             position: absolute;
-            bottom: -500px; /* Start off-screen */
-            width: 250px;
-            padding: 10px;
+            bottom: -600px;
+            width: 280px;
+            padding: 12px;
+            padding-bottom: 30px; /* Polaroid look */
             background: white;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-            border-radius: 5px;
-            transform: rotate(var(--rotation));
-            transition: transform 0.5s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            border-radius: 2px;
             z-index: 5;
             display: flex;
             flex-direction: column;
             align-items: center;
+            will-change: transform, bottom;
+        }
+
+        /* Responsive width for phones */
+        @media (max-width: 600px) {
+            .memory-card { width: 180px; padding: 8px; padding-bottom: 20px; }
         }
 
         .memory-card img {
             width: 100%;
             height: auto;
-            border-radius: 2px;
+            border-radius: 1px;
             display: block;
         }
 
-        .memory-card::after {
-            content: attr(data-label);
-            margin-top: 10px;
+        /* Caption below the image */
+        .memory-label {
+            margin-top: 15px;
             font-family: 'Dancing Script', cursive;
-            font-size: 1.2rem;
-            color: #555;
+            font-size: 1.3rem;
+            color: var(--text-gray);
         }
 
-        /* Animation for the float-up effect */
+        /* Animation */
         @keyframes floatUp {
             0% {
-                bottom: -500px;
+                bottom: -600px;
                 opacity: 0;
                 transform: translateX(0) rotate(var(--rotation));
             }
-            10% {
+            15% {
                 opacity: 1;
             }
-            90% {
+            85% {
                 opacity: 1;
             }
             100% {
-                bottom: 110%;
+                bottom: 115%;
                 opacity: 0;
-                transform: translateX(var(--drift)) rotate(calc(var(--rotation) + 10deg));
+                transform: translateX(var(--drift)) rotate(calc(var(--rotation) + 12deg));
             }
         }
 
         .float-animation {
-            animation: floatUp 15s linear forwards;
+            animation: floatUp 18s linear forwards;
         }
-
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>Forever & Always</h1>
-        <p>Rewinding our Love</p>
+        <h1>Forever With You</h1>
+        <p>A Journey Through Our Best Days</p>
     </div>
 
     <div id="stage"></div>
 
     <script>
         const stage = document.getElementById('stage');
-        let currentImage = 20; // Start at 20 as requested
+        let currentImage = 20; // Start at 20 (Descending)
         const totalImages = 20;
 
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.className = 'heart-bg';
-            heart.innerHTML = '❤';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.top = Math.random() * 100 + 'vh';
-            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-            document.body.appendChild(heart);
+        // Create background hearts
+        function initBackground() {
+            for(let i=0; i<25; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-bg';
+                heart.innerHTML = '❤';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = Math.random() * 100 + 'vh';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                document.body.appendChild(heart);
+            }
         }
-
-        // Create initial background decor
-        for(let i=0; i<30; i++) createHeart();
 
         function spawnMemory() {
             const card = document.createElement('div');
             card.className = 'memory-card float-animation';
             
-            // Randomize position and slight rotation for a "scattered photos" look
-            const randomX = Math.random() * 70 + 5; // 5% to 75% width
-            const randomRotation = (Math.random() * 30 - 15) + 'deg';
-            const randomDrift = (Math.random() * 100 - 50) + 'px';
+            // Random styling for unique feel
+            const randomX = Math.random() * 65 + 5; // Keeps cards within viewable area
+            const randomRotation = (Math.random() * 24 - 12) + 'deg';
+            const randomDrift = (Math.random() * 120 - 60) + 'px';
             
             card.style.left = randomX + 'vw';
             card.style.setProperty('--rotation', randomRotation);
             card.style.setProperty('--drift', randomDrift);
-            card.setAttribute('data-label', `Memory #${currentImage}`);
 
+            // Image Element
             const img = document.createElement('img');
             img.src = `${currentImage}.jpeg`;
-            img.alt = `Our Memory ${currentImage}`;
+            img.alt = `Memory ${currentImage}`;
 
-            // Handle image error
-            img.onerror = () => {
-                card.style.display = 'none';
-            };
+            // Caption Element
+            const label = document.createElement('div');
+            label.className = 'memory-label';
+            label.innerText = `Memory #${currentImage}`;
+
+            // Handle errors (skip to next image if one is missing)
+            img.onerror = () => { card.remove(); };
 
             card.appendChild(img);
+            card.appendChild(label);
             stage.appendChild(card);
 
-            // Cleanup DOM after animation finishes
-            setTimeout(() => {
-                card.remove();
-            }, 15000);
+            // Remove element from DOM after it leaves the screen to save memory
+            setTimeout(() => { card.remove(); }, 18500);
 
-            // Cycle descending
+            // Logic for descending order 20 -> 1
             currentImage--;
             if (currentImage < 1) {
-                currentImage = 20; // Loop back to 20
+                currentImage = totalImages; 
             }
         }
 
-        // Initial trigger
-        spawnMemory();
+        // Initialize
+        initBackground();
+        spawnMemory(); // Spawn first immediately
 
-        // 4-second interval as requested
+        // 4 Second interval as requested
         setInterval(spawnMemory, 4000);
     </script>
 </body>
